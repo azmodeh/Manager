@@ -19,13 +19,17 @@ async def generate_session_string() -> str:
             config["api_hash"]
         )
         
-        await client.start(phone=config.get("phone_number"))
+        phone_number = config.get("phone_number")
+        if phone_number:
+            await client.start(phone=phone_number)  # type: ignore[misc]
+        else:
+            await client.start()  # type: ignore[misc]
         
         if not client.session:
             raise ValueError("Session not created")
         
         session_string = client.session.save()
-        await client.disconnect()
+        await client.disconnect()  # type: ignore
         
         logger.info("session_string_generated")
         return session_string
