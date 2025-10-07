@@ -1,0 +1,26 @@
+paths:
+  venv: data/env/.venv
+  venv_python_windows: data/env/.venv/Scripts/python.exe
+  venv_python_unix: data/env/.venv/bin/python
+  requirements: data/env/requirements.txt
+
+messages:
+  banner: "ARISEN MANAGER LAUNCHER"
+  creating_venv: "Creating virtual environment..."
+  venv_created: "Virtual environment created"
+  installing_requirements: "Installing requirements..."
+  requirements_installed: "Requirements installed"
+  starting_app: "Starting Arisen Manager..."
+  venv_not_found: "Virtual environment not found"
+
+styles:
+  banner: "bold cyan"
+  panel: "cyan"
+  info: "blue"
+  success: "green"
+  error: "red"
+
+icons:
+  banner: "\U0001F680"
+  success: "\u2705"
+  error: "\u274C"

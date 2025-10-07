@@ -1,0 +1,28 @@
+# Callback Configuration
+# Defines callback data patterns and actions
+
+callback_patterns:
+  prefix: "CFG"
+  separator: "|"
+  
+actions:
+  MENU: "MENU"
+  TOGGLE: "TOGGLE" 
+  BACK: "BACK"
+  EDIT_TEXT: "EDIT_TEXT"
+  EDIT_BUTTONS: "EDIT_BUTTONS"
+  LIST: "LIST"
+  RESTRICTED: "RESTRICTED"
+  SETTINGS: "SETTINGS"
+  LANGUAGE: "LANGUAGE"
+  PREFIX: "PREFIX"
+  ADVANCED: "ADVANCED"
+
+features:
+  - welcome
+  - rules
+  - members
+  - settings
+
+# Callback data format: {prefix}{separator}{feature}{separator}{action}{separator}{chat_id}
+# Example: CFG|welcome|MENU|123456789
