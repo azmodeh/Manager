@@ -1,0 +1,21 @@
+formatting:
+  markdown:
+    bold: "**{text}**"
+    italic: "*{text}*"
+    code: "`{text}`"
+    pre: "```{text}```"
+    link: "[{text}]({url})"
+    mention: "[{text}](tg://user?id={user_id})"
+
+templates:
+  welcome_message:
+    format: "markdown"
+    style: "modern"
+  
+  rules_message:
+    format: "markdown"
+    style: "formal"
+  
+  admin_panel:
+    format: "html"
+    style: "clean"

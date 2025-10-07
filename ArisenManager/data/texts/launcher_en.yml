@@ -1,0 +1,15 @@
+launcher:
+  banner: "ArisenManager Launcher - Initialization"
+  venv:
+    creating: "Creating virtual environment..."
+    created: "[OK] Virtual environment created"
+    exists: "[OK] Virtual environment exists"
+    error: "[ERROR] Failed to create virtual environment: {error}"
+  requirements:
+    installing: "Installing requirements..."
+    success: "[OK] Requirements installed successfully"
+    error: "[ERROR] Failed to install requirements: {error}"
+    exception: "[ERROR] Error installing requirements: {error}"
+  app:
+    starting: "Starting ArisenManager..."
+    error: "[ERROR] Error running application: {error}"

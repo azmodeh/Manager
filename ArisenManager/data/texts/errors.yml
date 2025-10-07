@@ -1,0 +1,20 @@
+err:
+  database:
+    connection: "Database connection failed"
+    query: "Database query error: {error}"
+  
+  telegram:
+    auth: "Telegram authentication failed"
+    session: "Session creation failed"
+    api: "API call failed: {error}"
+  
+  config:
+    missing: "Configuration file missing: {file}"
+    invalid: "Invalid configuration: {error}"
+  
+  permission:
+    denied: "Permission denied"
+    admin_only: "Admin access required"
+  
+  group:
+    userbot_failed: "خطا در اضافه کردن یوزربات: {error}"

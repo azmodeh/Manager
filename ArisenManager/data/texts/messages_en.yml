@@ -1,0 +1,13 @@
+log:
+  startup: "Starting ArisenManager system..."
+  userbot_online: "UserBot is now online"
+  apibot_online: "API Bot is now online"
+  database_connected: "Database connection established"
+  session_created: "Session created successfully"
+  error: "Error occurred: {error}"
+  ready: "System is ready and running"
+
+sys:
+  init: "Initializing components..."
+  shutdown: "Shutting down system..."
+  restart: "Restarting system..."

@@ -1,0 +1,58 @@
+admin_panel:
+  main:
+    - text: "⚙️ تنظیمات عمومی"
+      callback: "admin_general"
+    - text: "👥 مدیریت گروه‌ها"
+      callback: "admin_groups"
+    - text: "📊 آمار"
+      callback: "admin_stats"
+    - text: "🔄 ری‌استارت"
+      callback: "admin_restart"
+
+group_settings:
+  main:
+    - text: "🎉 خوشامدگویی"
+      callback: "group_welcome"
+    - text: "📋 قوانین"
+      callback: "group_rules"
+    - text: "⚙️ تنظیمات کلی"
+      callback: "group_general"
+    - text: "🔙 بازگشت"
+      callback: "back_main"
+
+welcome_settings:
+  config:
+    - text: "✅ فعال"
+      callback: "welcome_enable"
+    - text: "❌ غیرفعال"
+      callback: "welcome_disable"
+    - text: "📝 ویرایش متن"
+      callback: "welcome_edit_text"
+    - text: "🖼️ ویرایش مدیا"
+      callback: "welcome_edit_media"
+    - text: "🔘 ویرایش دکمه‌ها"
+      callback: "welcome_edit_buttons"
+    - text: "🔙 بازگشت"
+      callback: "back_group"
+
+rules_settings:
+  config:
+    - text: "✅ فعال"
+      callback: "rules_enable"
+    - text: "❌ غیرفعال"
+      callback: "rules_disable"
+    - text: "📝 ویرایش متن"
+      callback: "rules_edit_text"
+    - text: "🖼️ ویرایش مدیا"
+      callback: "rules_edit_media"
+    - text: "🔘 ویرایش دکمه‌ها"
+      callback: "rules_edit_buttons"
+    - text: "🔙 بازگشت"
+      callback: "back_group"
+
+approval:
+  pending:
+    - text: "✅ تایید"
+      callback: "approve_group"
+    - text: "❌ رد"
+      callback: "reject_group"

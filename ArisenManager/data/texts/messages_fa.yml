@@ -1,0 +1,48 @@
+ui:
+  start:
+    title: "🌟 خوش آمدید"
+    text: "سلام {user}!\nبه ربات مدیریت گروه خوش آمدید."
+    disabled: "دستور استارت غیرفعال است."
+  
+  help:
+    title: "📚 راهنما"
+    text: "راهنمای استفاده از ربات:\n\n• استارت - شروع کار با ربات\n• هلپ - نمایش راهنما"
+    disabled: "دستور راهنما غیرفعال است."
+  
+  welcome:
+    title: "🎉 خوش آمدید"
+    text: "کاربر عزیز {user} به گروه {chat} خوش آمدید!"
+    disabled: "پیام خوشامدگویی غیرفعال است."
+  
+  rules:
+    title: "📋 قوانین گروه"
+    text: "قوانین گروه {chat}:\n\n• احترام به اعضا\n• عدم ارسال اسپم\n• رعایت آداب گفتگو"
+    disabled: "قوانین گروه تنظیم نشده است."
+
+  group:
+    approved: "✅ گروه تایید شد"
+    pending: "⏳ در انتظار تایید سودو"
+    userbot_added: "🤖 یوزربات با موفقیت اضافه شد"
+    panel: "🎛️ پنل مدیریت گروه {chat}"
+    panel_sent: "✅ پنل در پیوی باز شد"
+    settings:
+      welcome: "🎉 تنظیمات خوشامدگویی"
+      rules: "📋 تنظیمات قوانین"
+
+
+admin:
+  online: "🟢 {bot_type} آنلاین شد"
+  settings: "⚙️ تنظیمات"
+  panel: "🎛️ پنل مدیریت"
+  group:
+    approval_request: "گروه جدید: {group_title}\nID: {group_id}\n\nآیا تایید میکنید؟"
+    approved: "✅ گروه تایید شد"
+    rejected: "❌ گروه رد شد"
+  button:
+    approve: "✅ تایید"
+    reject: "❌ رد"
+
+cli:
+  startup: "راه‌اندازی سیستم..."
+  ready: "سیستم آماده است"
+  error: "خطا در اجرا"

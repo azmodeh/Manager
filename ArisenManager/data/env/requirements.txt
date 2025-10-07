@@ -1,0 +1,8 @@
+telethon==1.34.0
+aiosqlite==0.20.0
+pyyaml==6.0.1
+rich==13.7.0
+keyboa==2.2.0
+telegramify-markdown==0.1.6
+emoji
+python-dotenv==1.0.0

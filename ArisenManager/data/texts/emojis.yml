@@ -1,0 +1,27 @@
+status:
+  online: "🟢"
+  offline: "🔴"
+  pending: "⏳"
+  success: "✅"
+  error: "❌"
+  warning: "⚠️"
+
+actions:
+  start: "🚀"
+  stop: "⏹️"
+  restart: "🔄"
+  settings: "⚙️"
+  help: "📚"
+  info: "ℹ️"
+
+bot:
+  userbot: "👤"
+  apibot: "🤖"
+  admin: "👑"
+  user: "👤"
+
+group:
+  welcome: "🎉"
+  rules: "📋"
+  approved: "✅"
+  pending: "⏳"
