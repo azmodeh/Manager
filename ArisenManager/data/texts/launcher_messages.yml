@@ -1,0 +1,31 @@
+# Launcher Messages
+log:
+  venv_creating: "launcher.venv.creating"
+  venv_created: "launcher.venv.created"
+  venv_exists: "launcher.venv.exists"
+  venv_error: "launcher.venv.error"
+  requirements_installing: "launcher.requirements.installing"
+  requirements_success: "launcher.requirements.success"
+  requirements_error: "launcher.requirements.error"
+  requirements_exception: "launcher.requirements.exception"
+  app_starting: "launcher.app.starting"
+  app_error: "launcher.app.error"
+  banner_display: "launcher.banner.display"
+
+errors:
+  launcher:
+    venv:
+      creating: "Creating virtual environment..."
+      created: "Virtual environment created successfully"
+      exists: "Virtual environment already exists"
+      error: "Error creating virtual environment: {error}"
+    requirements:
+      installing: "Installing requirements..."
+      success: "Requirements installed successfully"
+      error: "Error installing requirements: {error}"
+      exception: "Exception during requirements installation: {error}"
+    app:
+      starting: "Starting application..."
+      error: "Error starting application: {error}"
+    banner:
+      display: "ArisenManager Launcher"

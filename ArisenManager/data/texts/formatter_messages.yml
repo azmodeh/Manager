@@ -1,0 +1,10 @@
+# Formatter Messages
+errors:
+  formatter:
+    format_error: "Text formatting error: {error}"
+    invalid_format_type: "Invalid format type: {format_type}"
+    text_too_long: "Text too long: {length} > {max_length}"
+    too_many_kwargs: "Too many format arguments: {count} > {max_count}"
+    forbidden_pattern: "Forbidden pattern detected: {pattern}"
+    emoji_conversion_error: "Emoji conversion error: {error}"
+    markdown_error: "Markdown formatting error: {error}"

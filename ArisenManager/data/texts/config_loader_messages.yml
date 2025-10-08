@@ -1,0 +1,8 @@
+# Config Loader Messages
+errors:
+  config_loader:
+    file_not_found: "Configuration file not found: {filename}"
+    file_read_error: "Error reading configuration file {filename}: {error}"
+    yaml_parse_error: "YAML parse error in {filename}: {error}"
+    invalid_filename: "Invalid configuration filename: {filename}"
+    path_traversal_attempt: "Path traversal attempt detected: {filename}"

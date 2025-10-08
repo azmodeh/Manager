@@ -1,0 +1,7 @@
+# Clients Messages
+errors:
+  telegram:
+    auth: "Telegram authentication error: {error}"
+    userbot_start_failed: "Failed to start userbot: {error}"
+    apibot_start_failed: "Failed to start API bot: {error}"
+    notification_failed: "Failed to send notification: {error}"

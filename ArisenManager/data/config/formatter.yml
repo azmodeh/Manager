@@ -1,0 +1,28 @@
+# Message Formatter Configuration
+format_types:
+  markdown: "markdown"
+  html: "html"
+  plain: "plain"
+
+url_templates:
+  user_mention: "tg://user?id={user_id}"
+  channel_link: "https://t.me/{username}"
+  
+placeholders:
+  max_length: 100
+  allowed_chars: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-"
+  
+security:
+  max_format_length: 10000
+  max_kwargs_count: 50
+  forbidden_patterns:
+    - "<script"
+    - "javascript:"
+    - "data:"
+    - "vbscript:"
+    - "onload="
+    - "onerror="
+
+emoji:
+  enable_conversion: true
+  max_emoji_count: 20

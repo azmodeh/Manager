@@ -1,0 +1,10 @@
+# Text Loader Messages
+errors:
+  text_loader:
+    file_not_found: "Text catalog file not found: {filename}"
+    file_read_error: "Error reading text catalog {filename}: {error}"
+    yaml_parse_error: "YAML parse error in {filename}: {error}"
+    invalid_filename: "Invalid text catalog filename: {filename}"
+    path_traversal_attempt: "Path traversal attempt detected: {filename}"
+    key_not_found: "Text key not found: {key} in {filename}"
+    format_error: "Text formatting error for key {key}: {error}"

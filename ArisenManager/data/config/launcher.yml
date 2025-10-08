@@ -1,0 +1,27 @@
+# Launcher Configuration
+paths:
+  venv_dir: "data/env/.venv"
+  requirements_file: "data/env/requirements.txt"
+  text_file: "data/texts/launcher_en.yml"
+  main_module: "app.main"
+
+platform:
+  windows:
+    name: "nt"
+    python_exe: "Scripts/python.exe"
+    pip_exe: "Scripts/pip.exe"
+  unix:
+    python_exe: "bin/python"
+    pip_exe: "bin/pip"
+
+display:
+  banner_char: "="
+  banner_length: 60
+
+commands:
+  pip_install: ["install", "-r"]
+  python_module: ["-m"]
+
+subprocess:
+  capture_output: true
+  text_encoding: true

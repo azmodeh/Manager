@@ -18,10 +18,28 @@ bot:
   userbot: "👤"
   apibot: "🤖"
   admin: "👑"
-  user: "👤"
 
 group:
   welcome: "🎉"
   rules: "📋"
   approved: "✅"
   pending: "⏳"
+
+keyboard:
+  admin:
+    settings: "⚙️"
+    users: "👥"
+    chart: "📊"
+    refresh: "🔄"
+  
+  common:
+    back: "🔙"
+    edit: "📝"
+    image: "🖼️"
+    button: "🔘"
+    check: "✅"
+    cross: "❌"
+  
+  group:
+    party: "🎉"
+    clipboard: "📋"

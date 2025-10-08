@@ -1,0 +1,6 @@
+# Keyboard Builder Messages
+errors:
+  keyboard:
+    template_not_found: "Keyboard template '{template}' not found"
+    build_error: "Error building keyboard: {error}"
+    format_error: "Error formatting button text: {error}"

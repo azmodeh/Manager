@@ -1,0 +1,68 @@
+# Qdrant Configuration
+connection:
+  default_url: "http://localhost:6333"
+  fallback_url: "http://localhost:6333"
+  timeout_ms: 5000
+  collection: "conv_memory"
+  embedding_dim: 768
+
+security:
+  allowed_schemes: "http,https"
+  allowed_hosts: "localhost,127.0.0.1"
+  allowed_domains: ""
+
+connector:
+  limit: 10
+  limit_per_host: 5
+  enable_cleanup_closed: true
+
+collection:
+  distance: "Cosine"
+  hnsw_m: 16
+  hnsw_ef_construct: 128
+
+search:
+  default_top_k: 5
+  default_ef: 96
+
+status_codes:
+  success: [200, 201]
+  ok: 200
+
+api:
+  header_key: "api-key"
+  endpoints:
+    collections: "/collections"
+    points: "/points"
+    search: "/points/search"
+
+payload_keys:
+  points: "points"
+  vector: "vector"
+  limit: "limit"
+  with_payload: "with_payload"
+  params: "params"
+  ef: "ef"
+  filter: "filter"
+  must: "must"
+  key: "key"
+  match: "match"
+  value: "value"
+  vectors: "vectors"
+  size: "size"
+  distance: "distance"
+  hnsw_config: "hnsw_config"
+  m: "m"
+  ef_construct: "ef_construct"
+
+response_keys:
+  result: "result"
+  status: "status"
+  latency_ms: "latency_ms"
+  collection: "collection"
+  error: "error"
+
+health_status:
+  healthy: "healthy"
+  unhealthy: "unhealthy"
+  error: "error"

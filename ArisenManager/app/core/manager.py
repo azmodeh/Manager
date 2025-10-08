@@ -7,6 +7,9 @@ from .database import database
 from .clients import bot_clients
 from .session_string import session_generator
 from ..handlers import register_start_help_handlers, register_admin_handlers, register_group_handlers
+from ..handlers.ai_handler import register_ai_handlers
+from ..handlers.text_editor import register_text_editor_handlers
+from ..handlers.user_settings import register_user_settings_handlers
 from ..utils.text_loader import text_loader
 from ..utils.config_loader import config_loader
 
@@ -54,6 +57,9 @@ class ArisenManager:
             register_start_help_handlers(bot_clients.apibot)
             register_admin_handlers(bot_clients.apibot)
             register_group_handlers(bot_clients.apibot)
+            register_ai_handlers(bot_clients.apibot)
+            register_text_editor_handlers(bot_clients.apibot)
+            register_user_settings_handlers(bot_clients.apibot)
             
             handlers_count = len(bot_clients.apibot.list_event_handlers())
             print(f"[DEBUG] Total handlers registered: {handlers_count}")

@@ -1,0 +1,43 @@
+# Vector Memory Configuration
+defaults:
+  top_k: 5
+  days_back: 30
+  batch_size: 32
+  flush_interval_ms: 300
+  time_decay_lambda: 0.1
+  dedup_window_minutes: 5
+  ef_search: 96
+  cache_size: 100
+
+env_keys:
+  top_k: "TOP_K_DEFAULT"
+  days_back: "DAYS_BACK_DEFAULT"
+  batch_size: "BATCH_SIZE"
+  flush_interval_ms: "FLUSH_INTERVAL_MS"
+  time_decay_lambda: "TIME_DECAY_LAMBDA"
+  dedup_window_minutes: "DEDUP_WINDOW_MIN"
+
+text_processing:
+  max_text_length: 1000
+  min_text_length: 3
+
+hashing:
+  algorithm: "sha256"
+  encoding: "utf-8"
+
+point_generation:
+  id_template: "{group_id}_{user_id}_{ts}_{hash_suffix}"
+  hash_modulo: 1000000
+
+payload_keys:
+  group_id: "group_id"
+  user_id: "user_id"
+  user_name: "user_name"
+  timestamp: "ts"
+  text: "text"
+  model: "model"
+  language: "lang"
+
+time_constants:
+  seconds_per_day: 86400
+  minutes_per_hour: 60

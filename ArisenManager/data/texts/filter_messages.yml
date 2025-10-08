@@ -1,0 +1,9 @@
+# Filter Messages
+errors:
+  admin_filter:
+    permission_check_failed: "Failed to check admin permissions: {error}"
+    not_admin: "User {user_id} is not admin in chat {chat_id}"
+  
+  sudo_filter:
+    permission_check_failed: "Failed to check sudo permissions: {error}"
+    access_denied: "Access denied for user {user_id}, sudo required"

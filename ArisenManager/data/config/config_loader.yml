@@ -1,0 +1,24 @@
+# Config Loader Configuration
+paths:
+  config_dir: "data/config"
+  
+allowed_files:
+  - "env.yml"
+  - "keyboard.yml"
+  - "database.yml"
+  - "qdrant.yml"
+  - "personality.yml"
+  - "clients.yml"
+  - "launcher.yml"
+  - "profile_manager.yml"
+  - "keyboard_builder.yml"
+  - "ai.yml"
+
+config_keys:
+  telegram: "telegram"
+  database: "database"
+  url: "url"
+  keyboard: "keyboard"
+
+file_encoding: "utf-8"
+file_mode: "r"

@@ -1,0 +1,78 @@
+# Database Configuration
+paths:
+  db_file: "database.db"
+  db_dir: "data"
+
+tables:
+  groups:
+    name: "groups"
+    columns:
+      id: "id"
+      title: "title"
+      approved: "approved"
+      start_enabled: "start_enabled"
+      start_text: "start_text"
+      help_enabled: "help_enabled"
+      help_text: "help_text"
+      welcome_enabled: "welcome_enabled"
+      welcome_text: "welcome_text"
+      welcome_media: "welcome_media"
+      welcome_buttons: "welcome_buttons"
+      rules_enabled: "rules_enabled"
+      rules_text: "rules_text"
+      rules_media: "rules_media"
+      rules_buttons: "rules_buttons"
+      created_at: "created_at"
+  
+  settings:
+    name: "settings"
+    columns:
+      key: "key"
+      value: "value"
+      updated_at: "updated_at"
+
+queries:
+  create_groups_table: |
+    CREATE TABLE IF NOT EXISTS groups (
+        id INTEGER PRIMARY KEY,
+        title TEXT NOT NULL,
+        approved INTEGER DEFAULT 0,
+        start_enabled INTEGER DEFAULT 0,
+        start_text TEXT,
+        help_enabled INTEGER DEFAULT 0,
+        help_text TEXT,
+        welcome_enabled INTEGER DEFAULT 0,
+        welcome_text TEXT,
+        welcome_media TEXT,
+        welcome_buttons TEXT,
+        rules_enabled INTEGER DEFAULT 0,
+        rules_text TEXT,
+        rules_media TEXT,
+        rules_buttons TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  
+  create_settings_table: |
+    CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  
+  add_start_enabled_column: "ALTER TABLE groups ADD COLUMN start_enabled INTEGER DEFAULT 0"
+  add_start_text_column: "ALTER TABLE groups ADD COLUMN start_text TEXT"
+  add_help_enabled_column: "ALTER TABLE groups ADD COLUMN help_enabled INTEGER DEFAULT 0"
+  add_help_text_column: "ALTER TABLE groups ADD COLUMN help_text TEXT"
+  
+  insert_or_replace_group: "INSERT OR REPLACE INTO groups (id, title) VALUES (?, ?)"
+  update_group_approved: "UPDATE groups SET approved = 1 WHERE id = ?"
+  select_group_by_id: "SELECT * FROM groups WHERE id = ?"
+  update_group_setting: "UPDATE groups SET {setting} = ? WHERE id = ?"
+
+json_columns:
+  - "welcome_buttons"
+  - "rules_buttons"
+
+defaults:
+  approved: 0
+  enabled: 1

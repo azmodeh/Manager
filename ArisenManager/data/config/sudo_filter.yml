@@ -1,0 +1,4 @@
+# Sudo Filter Configuration
+config_keys:
+  primary: "sudo_id"
+  fallback: "sudo"

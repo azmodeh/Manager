@@ -1,0 +1,103 @@
+# Profile Manager Configuration
+database:
+  tables:
+    user_profiles:
+      name: "user_profiles"
+      columns:
+        chat_id: "chat_id"
+        user_id: "user_id"
+        first_name: "first_name"
+        lang: "lang"
+        humor_level: "humor_level"
+        tone: "tone"
+        birthday: "birthday"
+        likes: "likes"
+        notes: "notes"
+        updated_at: "updated_at"
+    user_relations:
+      name: "user_relations"
+      columns:
+        chat_id: "chat_id"
+        a_user_id: "a_user_id"
+        b_user_id: "b_user_id"
+        type: "type"
+        updated_at: "updated_at"
+
+queries:
+  create_user_profiles: |
+    CREATE TABLE IF NOT EXISTS user_profiles (
+        chat_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        first_name TEXT,
+        lang TEXT,
+        humor_level TEXT,
+        tone TEXT,
+        birthday TEXT,
+        likes TEXT,
+        notes TEXT,
+        updated_at INTEGER,
+        PRIMARY KEY (chat_id, user_id)
+    )
+  create_user_relations: |
+    CREATE TABLE IF NOT EXISTS user_relations (
+        chat_id INTEGER NOT NULL,
+        a_user_id INTEGER NOT NULL,
+        b_user_id INTEGER NOT NULL,
+        type TEXT NOT NULL,
+        updated_at INTEGER,
+        PRIMARY KEY (chat_id, a_user_id, b_user_id)
+    )
+  select_user_profile: "SELECT * FROM user_profiles WHERE chat_id = ? AND user_id = ?"
+  insert_or_replace_profile: |
+    INSERT OR REPLACE INTO user_profiles 
+    (chat_id, user_id, first_name, lang, humor_level, tone, birthday, likes, notes, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+parsing:
+  languages:
+    turkish:
+      keywords: ["ترکی", "turkish"]
+      code: "tr"
+    kurdish:
+      keywords: ["کردی", "kurdish"]
+      code: "ku"
+    persian:
+      keywords: ["فارسی", "persian"]
+      code: "fa"
+  
+  tones:
+    casual:
+      keywords: ["خودمونی", "casual"]
+      code: "casual"
+    formal:
+      keywords: ["رسمی", "formal"]
+      code: "formal"
+    neutral:
+      keywords: ["معمولی", "neutral"]
+      code: "neutral"
+  
+  humor_levels:
+    low:
+      keywords: ["کم", "low"]
+      code: "low"
+    medium:
+      keywords: ["متوسط", "medium"]
+      code: "med"
+    high:
+      keywords: ["زیاد", "high"]
+      code: "high"
+
+validation:
+  birthday:
+    pattern: '\b(\d{4})-(\d{1,2})-(\d{1,2})\b'
+    year_min: 1900
+    year_max: 2010
+    month_min: 1
+    month_max: 12
+    day_min: 1
+    day_max: 31
+  
+  likes:
+    separator: ","
+    min_length: 1
+    split_char: ":"

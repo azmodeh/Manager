@@ -1,0 +1,11 @@
+# Database Messages
+errors:
+  database:
+    connection: "Database connection error: {error}"
+    table_creation: "Error creating tables: {error}"
+    group_add: "Error adding group: {error}"
+    group_approve: "Error approving group: {error}"
+    group_settings: "Error getting group settings: {error}"
+    group_update: "Error updating group setting: {error}"
+    column_add: "Error adding column: {error}"
+    json_parse: "JSON parse error for {column}: {error}"

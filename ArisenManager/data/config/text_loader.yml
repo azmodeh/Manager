@@ -1,0 +1,36 @@
+# Text Loader Configuration
+paths:
+  texts_dir: "data/texts"
+
+allowed_files:
+  - "messages_fa.yml"
+  - "messages_en.yml"
+  - "errors.yml"
+  - "emojis.yml"
+  - "qdrant_messages.yml"
+  - "profile_messages.yml"
+  - "keyboard_messages.yml"
+  - "launcher_messages.yml"
+  - "clients_messages.yml"
+  - "database_messages.yml"
+  - "filter_messages.yml"
+  - "config_loader_messages.yml"
+  - "formatter_messages.yml"
+
+file_templates:
+  messages: "messages_{lang}.yml"
+  errors: "errors.yml"
+  emojis: "emojis.yml"
+
+languages:
+  default: "fa"
+  supported: ["fa", "en"]
+
+file_settings:
+  encoding: "utf-8"
+  mode: "r"
+
+fallback:
+  text: ""
+  error: "Error: {key}"
+  emoji: ""

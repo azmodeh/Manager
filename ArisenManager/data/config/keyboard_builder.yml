@@ -1,0 +1,12 @@
+# Keyboard Builder Configuration
+settings:
+  default_items_per_row: 2
+
+button_keys:
+  text: "text"
+  callback_data: "callback_data"
+  callback: "callback"
+
+keyboard_types:
+  inline: "inline"
+  reply: "reply"

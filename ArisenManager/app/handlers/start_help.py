@@ -6,35 +6,27 @@ from ..utils.formatter import message_formatter
 from ..filters import private_filter, sudo_filter
 
 async def handle_start(event: events.NewMessage.Event) -> None:
-    print(f"[DEBUG] Start command from user: {event.sender_id}")
     user = await event.get_sender()
     settings = await database.get_group_settings(0)
-    print(f"[DEBUG] Global settings: {settings}")
     
     if settings and settings.get("start_enabled", False):
-        text = text_loader.get_text("ui.start.text", user=user.first_name)
-        print(f"[DEBUG] Start text: {text}")
-        formatted_text = message_formatter.format_message(text)
-        await event.respond(formatted_text, parse_mode="markdown")
+        start_text = settings.get("start_text") or text_loader.get_text("ui.start.text")
+        formatted_text = message_formatter.format_message(start_text, user=user.first_name)
+        await event.respond(formatted_text, parse_mode="markdown", reply_to=None)
     else:
         disabled_text = text_loader.get_text("ui.start.disabled")
-        print(f"[DEBUG] Start disabled text: {disabled_text}")
-        await event.respond(disabled_text)
+        await event.respond(disabled_text, reply_to=None)
 
 async def handle_help(event: events.NewMessage.Event) -> None:
-    print(f"[DEBUG] Help command from user: {event.sender_id}")
     settings = await database.get_group_settings(0)
-    print(f"[DEBUG] Global settings: {settings}")
     
     if settings and settings.get("help_enabled", False):
-        text = text_loader.get_text("ui.help.text")
-        print(f"[DEBUG] Help text: {text}")
-        formatted_text = message_formatter.format_message(text)
-        await event.respond(formatted_text, parse_mode="markdown")
+        help_text = settings.get("help_text") or text_loader.get_text("ui.help.text")
+        formatted_text = message_formatter.format_message(help_text)
+        await event.respond(formatted_text, parse_mode="markdown", reply_to=None)
     else:
         disabled_text = text_loader.get_text("ui.help.disabled")
-        print(f"[DEBUG] Help disabled text: {disabled_text}")
-        await event.respond(disabled_text)
+        await event.respond(disabled_text, reply_to=None)
 
 @sudo_filter
 async def handle_sudo_panel(event: events.NewMessage.Event) -> None:

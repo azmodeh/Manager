@@ -1,13 +1,69 @@
-log:
-  startup: "Starting ArisenManager system..."
-  userbot_online: "UserBot is now online"
-  apibot_online: "API Bot is now online"
-  database_connected: "Database connection established"
-  session_created: "Session created successfully"
-  error: "Error occurred: {error}"
-  ready: "System is ready and running"
+# English UI Messages (fallback)
+ui:
+  default_user_name: "friend"
+  welcome:
+    text: "Hello {user}! Welcome to {chat} group 🎉"
+  
+  group:
+    panel: "Group management panel for {chat}"
+    panel_sent: "Management panel sent to you"
+    pending: "Bot is waiting for admin approval..."
+    approved: "Group approved! ✅"
+    rejected: "Group rejected ❌"
+    userbot_added: "Userbot added successfully 🤖"
+  
+  rules:
+    text: "Rules for {chat} group:\n\n📋 Please follow the rules"
+    disabled: "Rules are not enabled for this group"
+  
+  buttons:
+    settings:
+      welcome: "Welcome Settings"
+      rules: "Rules Settings"
 
-sys:
-  init: "Initializing components..."
-  shutdown: "Shutting down system..."
-  restart: "Restarting system..."
+admin:
+  online: "{bot_type} is online ✅"
+  group:
+    approval_request: "Group approval request:\n\n📝 Name: {group_title}\n🆔 ID: {group_id}"
+    approved: "Group approved"
+    rejected: "Group rejected"
+  
+  button:
+    approve: "Approve"
+    reject: "Reject"
+
+err:
+  group:
+    userbot_failed: "Error adding userbot to group: {error}"
+
+vector_memory:
+  defaults:
+    model: "default"
+    language: "fa"
+# English log messages
+log:
+  embedding:
+    model_loaded: "Embedding model loaded: {model}"
+    text_too_short: "Text too short for embedding: {length} chars"
+    no_valid_texts: "No valid texts for batch embedding"
+  qdrant:
+    client_connected: "Qdrant client connected to {url}"
+    collection_exists: "Collection '{name}' already exists"
+    collection_created: "Collection '{name}' created with {dim} dimensions"
+    empty_vector: "Cannot upsert empty vector"
+    upsert_success: "Memory upserted for chat {chat_id}"
+    search_results: "Found {count} search results"
+    compact_complete: "Compacted {count} old memories"
+
+err:
+  embedding:
+    model_load: "Failed to load embedding model: {error}"
+    encode: "Embedding encode error: {error}"
+    batch_encode: "Batch embedding error: {error}"
+  qdrant:
+    connection: "Qdrant connection error: {error}"
+    collection_create: "Collection creation failed: {error}"
+    collection_setup: "Collection setup error: {error}"
+    upsert: "Memory upsert error: {error}"
+    search: "Memory search error: {error}"
+    compact: "Memory compact error: {error}"

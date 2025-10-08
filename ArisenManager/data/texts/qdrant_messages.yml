@@ -1,0 +1,37 @@
+# Qdrant Log Messages (English)
+log:
+  collection_created: "qdrant.collection.created"
+  collection_create_failed: "qdrant.collection.create_failed"
+  collection_setup_error: "qdrant.collection.setup_error"
+  upsert_success: "qdrant.upsert.success"
+  upsert_failed: "qdrant.upsert.failed"
+  upsert_error: "qdrant.upsert.error"
+  search_error: "qdrant.search.error"
+  healthcheck_passed: "qdrant.healthcheck.passed"
+  healthcheck_failed: "qdrant.healthcheck.failed"
+  healthcheck_error: "qdrant.healthcheck.error"
+  url_validation_error: "qdrant.url.validation_error"
+  scheme_invalid: "qdrant.url.scheme_invalid"
+  host_not_allowed: "qdrant.url.host_not_allowed"
+
+# Error message templates
+errors:
+  qdrant:
+    collection:
+      created: "Successfully created Qdrant collection '{collection}' with embedding dimension {embedding_dim}"
+      create_failed: "Failed to create collection: {status}"
+      setup_error: "Qdrant collection setup error: {error}"
+    upsert:
+      success: "Successfully upserted {count} points to Qdrant"
+      failed: "Qdrant upsert failed with status: {status}"
+      error: "Qdrant upsert error: {error}"
+    search:
+      error: "Qdrant search error: {error}"
+    healthcheck:
+      passed: "Qdrant healthcheck passed: {latency}ms"
+      failed: "Qdrant healthcheck failed: status {status}"
+      error: "Qdrant healthcheck error: {error}"
+    url:
+      validation_error: "Invalid Qdrant URL: {error}"
+      scheme_invalid: "Invalid scheme: {scheme}"
+      host_not_allowed: "Host not allowed: {hostname}"

@@ -1,21 +1,51 @@
-formatting:
-  markdown:
-    bold: "**{text}**"
-    italic: "*{text}*"
-    code: "`{text}`"
-    pre: "```{text}```"
-    link: "[{text}]({url})"
-    mention: "[{text}](tg://user?id={user_id})"
+primary:
+  base_url_env: "PRIMARY_AI_BASE_URL"
+  api_key_env: "PRIMARY_AI_API_KEY"
+  model_id_env: "PRIMARY_AI_MODEL"
 
-templates:
-  welcome_message:
-    format: "markdown"
-    style: "modern"
-  
-  rules_message:
-    format: "markdown"
-    style: "formal"
-  
-  admin_panel:
-    format: "html"
-    style: "clean"
+fallback_1:
+  base_url_env: "FALLBACK1_AI_BASE_URL"
+  api_key_env: "FALLBACK1_AI_API_KEY"
+  model_id_env: "FALLBACK1_AI_MODEL"
+
+fallback_2:
+  base_url_env: "FALLBACK2_AI_BASE_URL"
+  api_key_env: "FALLBACK2_AI_API_KEY"
+  model_id_env: "FALLBACK2_AI_MODEL"
+
+policy:
+  timeout_ms: 12000
+  max_retries: 1
+  switch_threshold_ms: 4000
+  cooldown_sec: 300
+  max_tokens: 200
+  temperature: 0.8
+  memory_context_limit: 5
+  rate_limit_per_user: 10
+  rate_limit_window_sec: 60
+
+personality:
+  tone: "friendly_persian"
+  energy_level: 0.7
+  humor_level: 0.3
+  use_names: true
+  max_reply_length: 200
+  greeting_variants:
+    - "سلام {name}"
+    - "درود بر {name}"
+    - "یا {name}! 😄"
+    - "{name} جان چطوری؟"
+
+styles:
+  ai_reply_prefix: ""
+  ai_reply_suffix: ""
+  use_emojis: true
+  context_aware: true
+
+triggers:
+  mention_keywords: ["جمی", "jemm", "jemi"]
+  question_endings: ["؟", "!"]
+  respond_to_replies: true
+
+errors:
+  all_failed: "⚠️ سیستم هوش مصنوعی فعلاً در دسترس نیست، لطفاً بعداً دوباره امتحان کنید."

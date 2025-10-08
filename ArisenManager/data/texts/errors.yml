@@ -1,20 +1,124 @@
-err:
-  database:
-    connection: "Database connection failed"
-    query: "Database query error: {error}"
-  
-  telegram:
-    auth: "Telegram authentication failed"
-    session: "Session creation failed"
-    api: "API call failed: {error}"
-  
-  config:
-    missing: "Configuration file missing: {file}"
-    invalid: "Invalid configuration: {error}"
-  
-  permission:
-    denied: "Permission denied"
-    admin_only: "Admin access required"
-  
-  group:
-    userbot_failed: "خطا در اضافه کردن یوزربات: {error}"
+# Error Messages (English for logs)
+database:
+  connection: "Database connection failed: {error}"
+  query: "Database query error: {error}"
+  table_creation: "Error creating tables: {error}"
+  group_add: "Error adding group: {error}"
+  group_approve: "Error approving group: {error}"
+  group_settings: "Error getting group settings: {error}"
+  group_update: "Error updating group setting: {error}"
+  column_add: "Error adding column: {error}"
+  json_parse: "JSON parse error for {column}: {error}"
+
+telegram:
+  auth: "Telegram authentication error: {error}"
+  session: "Session creation failed: {error}"
+  api: "API call failed: {error}"
+  userbot_start_failed: "Failed to start userbot: {error}"
+  apibot_start_failed: "Failed to start API bot: {error}"
+  notification_failed: "Failed to send notification: {error}"
+
+config:
+  missing: "Configuration file missing: {file}"
+  invalid: "Invalid configuration: {error}"
+  file_not_found: "Configuration file not found: {filename}"
+  file_read_error: "Error reading configuration file {filename}: {error}"
+  yaml_parse_error: "YAML parse error in {filename}: {error}"
+  invalid_filename: "Invalid configuration filename: {filename}"
+  path_traversal_attempt: "Path traversal attempt detected: {filename}"
+
+permission:
+  denied: "Permission denied"
+  admin_only: "Admin access required"
+
+group:
+  userbot_failed: "Error adding userbot to group: {error}"
+  approval_request: "Group approval request failed: {error}"
+  settings_update: "Group settings update failed: {error}"
+
+qdrant:
+  collection:
+    created: "Successfully created Qdrant collection '{collection}' with embedding dimension {embedding_dim}"
+    create_failed: "Failed to create collection: {status}"
+    setup_error: "Qdrant collection setup error: {error}"
+  upsert:
+    success: "Successfully upserted {count} points to Qdrant"
+    failed: "Qdrant upsert failed with status: {status}"
+    error: "Qdrant upsert error: {error}"
+  search:
+    error: "Qdrant search error: {error}"
+  healthcheck:
+    passed: "Qdrant healthcheck passed: {latency}ms"
+    failed: "Qdrant healthcheck failed: status {status}"
+    error: "Qdrant healthcheck error: {error}"
+  url:
+    validation_error: "Invalid Qdrant URL: {error}"
+    scheme_invalid: "Invalid scheme: {scheme}"
+    host_not_allowed: "Host not allowed: {hostname}"
+
+profile:
+  tables:
+    init_error: "Profile tables init error: {error}"
+
+admin_filter:
+  permission_check_failed: "Failed to check admin permissions: {error}"
+  not_admin: "User {user_id} is not admin in chat {chat_id}"
+
+sudo_filter:
+  permission_check_failed: "Failed to check sudo permissions: {error}"
+  access_denied: "Access denied for user {user_id}, sudo required"
+
+text_loader:
+  file_not_found: "Text catalog file not found: {filename}"
+  file_read_error: "Error reading text catalog {filename}: {error}"
+  yaml_parse_error: "YAML parse error in {filename}: {error}"
+  invalid_filename: "Invalid text catalog filename: {filename}"
+  path_traversal_attempt: "Path traversal attempt detected: {filename}"
+  key_not_found: "Text key not found: {key} in {filename}"
+  format_error: "Text formatting error for key {key}: {error}"
+
+config_loader:
+  file_not_found: "Configuration file not found: {filename}"
+  file_read_error: "Error reading configuration file {filename}: {error}"
+  yaml_parse_error: "YAML parse error in {filename}: {error}"
+  invalid_filename: "Invalid configuration filename: {filename}"
+  path_traversal_attempt: "Path traversal attempt detected: {filename}"
+
+formatter:
+  format_error: "Text formatting error: {error}"
+  invalid_format_type: "Invalid format type: {format_type}"
+  text_too_long: "Text too long: {length} > {max_length}"
+  too_many_kwargs: "Too many format arguments: {count} > {max_count}"
+  forbidden_pattern: "Forbidden pattern detected: {pattern}"
+  emoji_conversion_error: "Emoji conversion error: {error}"
+  markdown_error: "Markdown formatting error: {error}"
+
+keyboard:
+  template_not_found: "Keyboard template '{template}' not found"
+  build_error: "Error building keyboard: {error}"
+  format_error: "Error formatting button text: {error}"
+
+launcher:
+  venv:
+    creating: "Creating virtual environment..."
+    created: "Virtual environment created successfully"
+    exists: "Virtual environment already exists"
+    error: "Error creating virtual environment: {error}"
+  requirements:
+    installing: "Installing requirements..."
+    success: "Requirements installed successfully"
+    error: "Error installing requirements: {error}"
+    exception: "Exception during requirements installation: {error}"
+  app:
+    starting: "Starting application..."
+    error: "Error starting application: {error}"
+  banner:
+    display: "ArisenManager Launcher"
+
+vector_memory:
+  upsert_error: "Memory upsert error: {error}"
+  get_context_error: "Memory get_context error: {error}"
+  flush_error: "Batch flush error: {error}"
+  background_flush_error: "Background flush error: {error}"
+  init_error: "Vector memory initialization error: {error}"
+  cache_error: "Cache operation error: {error}"

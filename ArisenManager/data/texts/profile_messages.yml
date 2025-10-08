@@ -1,0 +1,8 @@
+# Profile Manager Messages
+log:
+  profile_tables_init_error: "profile.tables.init_error"
+
+errors:
+  profile:
+    tables:
+      init_error: "Profile tables init error: {error}"

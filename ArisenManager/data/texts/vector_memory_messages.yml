@@ -1,0 +1,13 @@
+# Vector Memory Messages
+errors:
+  vector_memory:
+    upsert_error: "Memory upsert error: {error}"
+    get_context_error: "Memory get_context error: {error}"
+    flush_error: "Batch flush error: {error}"
+    background_flush_error: "Background flush error: {error}"
+    init_error: "Vector memory initialization error: {error}"
+    cache_error: "Cache operation error: {error}"
+
+defaults:
+  model: "default"
+  language: "fa"

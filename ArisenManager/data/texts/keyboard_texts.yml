@@ -1,0 +1,24 @@
+# Keyboard Button Texts
+admin:
+  buttons:
+    general: "تنظیمات عمومی"
+    groups: "مدیریت گروهها"
+    stats: "آمار"
+    restart: "ریاستارت"
+    approve: "تایید"
+    reject: "رد"
+
+group:
+  buttons:
+    welcome: "خوشامدگویی"
+    rules: "قوانین"
+    general: "تنظیمات کلی"
+
+common:
+  buttons:
+    enable: "فعال"
+    disable: "غیرفعال"
+    edit_text: "ویرایش متن"
+    edit_media: "ویرایش مدیا"
+    edit_buttons: "ویرایش دکمهها"
+    back: "بازگشت"

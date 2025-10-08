@@ -2,8 +2,11 @@ from telethon import TelegramClient
 from telethon.sessions import StringSession
 from typing import Optional
 import asyncio
+import logging
 from ..utils.config_loader import config_loader
 from ..utils.text_loader import text_loader
+
+logger = logging.getLogger(__name__)
 
 class SessionGenerator:
     def __init__(self) -> None:
@@ -23,7 +26,7 @@ class SessionGenerator:
             
             return session_string
         except Exception as e:
-            print(text_loader.get_error("telegram.session", error=str(e)))
+            logger.error(text_loader.get_error("telegram.session", error=str(e)))
             return None
     
     async def generate_bot_session(self) -> Optional[str]:
@@ -40,7 +43,7 @@ class SessionGenerator:
             
             return session_string
         except Exception as e:
-            print(text_loader.get_error("telegram.session", error=str(e)))
+            logger.error(text_loader.get_error("telegram.session", error=str(e)))
             return None
 
 session_generator = SessionGenerator()
