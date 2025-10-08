@@ -1,5 +1,6 @@
 launcher:
-  banner: "ArisenManager Launcher - Initialization"
+  banner:
+    display: "ArisenManager Launcher - Initialization"
   venv:
     creating: "Creating virtual environment..."
     created: "[OK] Virtual environment created"

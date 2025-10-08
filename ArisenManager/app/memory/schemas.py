@@ -1,36 +1,54 @@
-"""Memory schemas for embedding and vector operations."""
+from typing import Optional
+from pydantic import BaseModel
+from ..utils.text_loader import text_loader
 
-from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
+# Cache text lookups at module level
+_TEXTS = {
+    "default_lang": text_loader.get_text("vector_memory.defaults.language"),
+    "default_model": text_loader.get_text("vector_memory.defaults.model"),
+    "default_collection": "memories"
+}
 
 
 class EmbeddingPayload(BaseModel):
-    """Payload for embedding storage."""
-    
-    chat_id: int = Field(..., description="Chat identifier")
-    user_id: int = Field(..., description="User identifier")
-    text: str = Field(..., description="Original text content")
-    lang: str = Field(default="fa", description="Language code")
-    ts: int = Field(..., description="Unix timestamp")
+    chat_id: int
+    user_id: int
+    text: str
+    lang: str = _TEXTS["default_lang"]
+    ts: int
 
 
 class SearchResult(BaseModel):
-    """Vector search result."""
-    
-    payload: EmbeddingPayload = Field(..., description="Stored payload")
-    score: float = Field(..., description="Similarity score")
-    id: str = Field(..., description="Point identifier")
+    payload: EmbeddingPayload
+    score: float
+    id: str
+
+
+class MemoryPayload(BaseModel):
+    group_id: int
+    user_id: int
+    user_name: str
+    timestamp: int
+    text: str
+    model: str = _TEXTS["default_model"]
+    language: str = _TEXTS["default_lang"]
+
+
+class ContextResult(BaseModel):
+    text: str
+    user_id: int
+    user_name: str
+    ts: int
+    score: float
 
 
 class ConfigSchema(BaseModel):
-    """Configuration schema for embedding and vector services."""
-    
-    model: str = Field(default="BAAI/bge-m3", description="HuggingFace model")
-    dim: int = Field(default=1024, description="Embedding dimension")
-    qdrant_url: str = Field(..., description="Qdrant server URL")
-    qdrant_api_key: Optional[str] = Field(None, description="Qdrant API key")
-    collection_name: str = Field(default="conv_memory", description="Collection")
-    distance_metric: str = Field(default="Cosine", description="Distance metric")
-    batch_size: int = Field(default=32, description="Batch processing size")
-    max_text_length: int = Field(default=8192, description="Max text length")
-    min_text_length: int = Field(default=3, description="Min text length")
+    model: str = _TEXTS["default_model"]
+    dim: int = 1024
+    qdrant_url: str
+    qdrant_api_key: Optional[str] = None
+    collection_name: str = _TEXTS["default_collection"]
+    distance_metric: str = "Cosine"
+    batch_size: int = 32
+    max_text_length: int = 8192
+    min_text_length: int = 3

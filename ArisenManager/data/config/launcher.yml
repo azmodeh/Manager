@@ -24,4 +24,4 @@ commands:
 
 subprocess:
   capture_output: true
-  text_encoding: true
+  text: true

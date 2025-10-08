@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 import yaml
 
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
 class ArisenLauncher:
@@ -32,12 +33,15 @@ class ArisenLauncher:
     
     def _get_text(self, key: str, **kwargs) -> str:
         keys = key.split(".")
-        value = self.texts.get("errors", {})
+        value = self.texts
         for k in keys:
-            value = value.get(k, {})
+            if isinstance(value, dict):
+                value = value.get(k, {})
+            else:
+                return key
         if isinstance(value, str):
             return value.format(**kwargs)
-        return ""
+        return key
     
     def display_banner(self) -> None:
         banner_char = self.config["display"]["banner_char"]
@@ -77,7 +81,7 @@ class ArisenLauncher:
             result = subprocess.run(
                 cmd,
                 capture_output=self.config["subprocess"]["capture_output"],
-                text=self.config["subprocess"]["text_encoding"]
+                text=self.config["subprocess"]["text"]
             )
             
             if result.returncode == 0:

@@ -39,10 +39,21 @@ class UserProfileManager:
                 profile = dict(zip(columns, row))
                 likes_col = self.config["database"]["tables"]["user_profiles"]["columns"]["likes"]
                 if profile.get(likes_col):
-                    profile[likes_col] = profile[likes_col].split(self.config["validation"]["likes"]["separator"])
+                    raw_likes = profile[likes_col].split(self.config["validation"]["likes"]["separator"])
+                    # Sanitize likes to prevent XSS
+                    sanitized_likes = []
+                    for like in raw_likes:
+                        if like:
+                            clean_like = re.sub(r'<[^>]*>', '', like.strip())
+                            clean_like = clean_like[:100]  # Limit length
+                            if clean_like:
+                                sanitized_likes.append(clean_like)
+                    profile[likes_col] = sanitized_likes
                 return profile
-        except Exception:
-            pass
+        except KeyError as e:
+            logger.error(text_loader.get_error("profile.config_missing", key=str(e)))
+        except Exception as e:
+            logger.error(text_loader.get_error("profile.db_error", error=str(e)))
         return None
     
     async def db_set_user_profile(self, chat_id: int, user_id: int, updates: Dict) -> bool:
@@ -55,9 +66,22 @@ class UserProfileManager:
             likes_col = self.config["database"]["tables"]["user_profiles"]["columns"]["likes"]
             for key, value in updates.items():
                 if key == likes_col and isinstance(value, list):
-                    existing[key] = self.config["validation"]["likes"]["separator"].join(value)
+                    # Sanitize likes list
+                    sanitized_likes = []
+                    for like in value:
+                        if isinstance(like, str):
+                            clean_like = re.sub(r'<[^>]*>', '', like.strip())
+                            clean_like = clean_like[:100]
+                            if clean_like:
+                                sanitized_likes.append(clean_like)
+                    existing[key] = self.config["validation"]["likes"]["separator"].join(sanitized_likes)
                 else:
-                    existing[key] = value
+                    # Sanitize string values to prevent XSS
+                    if isinstance(value, str):
+                        clean_value = re.sub(r'<[^>]*>', '', value.strip())
+                        existing[key] = clean_value[:200]  # Limit length
+                    else:
+                        existing[key] = value
             
             updated_at_col = self.config["database"]["tables"]["user_profiles"]["columns"]["updated_at"]
             existing[updated_at_col] = int(time.time())
@@ -80,7 +104,11 @@ class UserProfileManager:
             
             await database.connection.commit()
             return True
-        except Exception:
+        except KeyError as e:
+            logger.error(text_loader.get_error("profile.config_missing", key=str(e)))
+            return False
+        except Exception as e:
+            logger.error(text_loader.get_error("profile.db_error", error=str(e)))
             return False
     
     def parse_language(self, text: str) -> Optional[str]:
@@ -121,7 +149,8 @@ class UserProfileManager:
                 if (validation["year_min"] <= year_int <= validation["year_max"] and
                     validation["month_min"] <= month_int <= validation["month_max"] and
                     validation["day_min"] <= day_int <= validation["day_max"]):
-                    return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+                    # Use validated integers to prevent XSS
+                    return f"{year_int}-{month_int:02d}-{day_int:02d}"
             except ValueError:
                 pass
         return None
@@ -137,6 +166,14 @@ class UserProfileManager:
             likes_part = text
         
         likes = [like.strip() for like in likes_part.split(separator)]
-        return [like for like in likes if like and len(like) > min_length]
+        sanitized_likes = []
+        for like in likes:
+            if like and len(like) > min_length:
+                # Remove HTML tags and limit length to prevent XSS
+                clean_like = re.sub(r'<[^>]*>', '', like)
+                clean_like = clean_like[:100]  # Limit length
+                if clean_like:
+                    sanitized_likes.append(clean_like)
+        return sanitized_likes
 
 profile_manager = UserProfileManager()

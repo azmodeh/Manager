@@ -1,141 +1,149 @@
 import re
+from typing import Dict, Any, Optional
 from telethon import events
 from ..user import profile_manager
 from ..filters import group_filter
+from ..utils.text_loader import text_loader
+
+# Cache frequently used text keys
+class TextKeys:
+    def __init__(self) -> None:
+        # System field keys
+        self.lang_field = "lang"
+        self.first_name_field = "first_name"
+        self.tone_field = "tone"
+        self.humor_level_field = "humor_level"
+        self.birthday_field = "birthday"
+        self.likes_field = "likes"
+        
+        # System keys for confirmations
+        self.type_key = "type"
+        self.value_key = "value"
+        self.chat_id_key = "chat_id"
+        self.user_name_key = "user_name"
+        self.birthday_type = "birthday"
+        
+        # Regex patterns
+        self.settings_pattern = r"تنظیمات|settings"
+        self.language_pattern = r"زبان|language|lang"
+        self.tone_pattern = r"لحن|tone"
+        self.humor_pattern = r"طنز|humor"
+        self.birthday_pattern = r"تولد|birthday"
+        self.likes_pattern = r"علاقه|likes?"
+        self.yes_pattern = r"بله|yes|آره"
+        self.no_pattern = r"نه|no|خیر"
+
+text_keys = TextKeys()
 
 @group_filter
 async def handle_user_settings(event: events.NewMessage.Event) -> None:
     message = event.message.message
     user = await event.get_sender()
-    user_name = user.first_name or "دوست"
+    user_name = user.first_name or text_loader.get_text("ui.default_user_name")
     
-    # Initialize tables
     await profile_manager.init_tables()
-    
-    # Get user profile
     profile = await profile_manager.db_get_user_profile(event.chat_id, event.sender_id)
-    user_lang = profile.get("lang", "fa") if profile else "fa"
+    user_lang = profile.get(text_keys.lang_field, "fa") if profile else "fa"
     
-    # Update first name
+    # Update first name if profile exists
     if profile:
-        await profile_manager.db_set_user_profile(event.chat_id, event.sender_id, {"first_name": user_name})
+        await profile_manager.db_set_user_profile(event.chat_id, event.sender_id, {text_keys.first_name_field: user_name})
     
     # Show settings
-    if re.search(r'تنظیمات من|my settings', message, re.IGNORECASE):
+    if re.search(text_keys.settings_pattern, message, re.IGNORECASE):
         if profile:
-            if user_lang == "tr":
-                summary = f"{user_name}, ayarlarınız:\n"
-                if profile.get("lang"): summary += f"• Dil: {profile['lang']}\n"
-                if profile.get("tone"): summary += f"• Ton: {profile['tone']}\n"
-                if profile.get("humor_level"): summary += f"• Mizah: {profile['humor_level']}\n"
-            else:
-                summary = f"{user_name}، تنظیمات شما:\n"
-                if profile.get("lang"): summary += f"• زبان: {profile['lang']}\n"
-                if profile.get("tone"): summary += f"• لحن: {profile['tone']}\n"
-                if profile.get("humor_level"): summary += f"• شوخی: {profile['humor_level']}\n"
-                if profile.get("likes"):
-                    likes = profile["likes"] if isinstance(profile["likes"], list) else profile["likes"].split(",")
-                    summary += f"• سلیقهها: {', '.join(likes)}\n"
+            summary = text_loader.get_text("ui.settings_summary", user=user_name, lang=user_lang)
+            
+            # Build settings display efficiently
+            settings_map = [
+                (text_keys.lang_field, "ui.setting_lang"),
+                (text_keys.tone_field, "ui.setting_tone"),
+                (text_keys.humor_level_field, "ui.setting_humor")
+            ]
+            
+            for field, text_key in settings_map:
+                if profile.get(field):
+                    summary += text_loader.get_text(text_key, value=profile[field], lang=user_lang)
+            
+            # Handle likes separately due to list processing
+            if profile.get(text_keys.likes_field):
+                likes_value = profile[text_keys.likes_field]
+                likes = likes_value if isinstance(likes_value, list) else likes_value.split(",")
+                summary += text_loader.get_text("ui.setting_likes", value=', '.join(likes), lang=user_lang)
         else:
-            summary = f"{user_name}، هنوز تنظیماتی ندارید."
+            summary = text_loader.get_text("ui.no_settings", user=user_name, lang=user_lang)
         
         await event.respond(summary.strip(), reply_to=None)
         return
     
-    # Language setting
-    lang = profile_manager.parse_language(message)
-    if lang and re.search(r'زبان من|my language', message, re.IGNORECASE):
-        success = await profile_manager.db_set_user_profile(event.chat_id, event.sender_id, {"lang": lang, "first_name": user_name})
-        if success:
-            if lang == "tr":
-                await event.respond(f"{user_name}, diliniz Türkçe olarak ayarlandı. 👍", reply_to=None)
-            elif lang == "ku":
-                await event.respond(f"{user_name}, زمانت بۆ کوردی دانرا. 👍", reply_to=None)
-            else:
-                await event.respond(f"{user_name}، زبانت روی فارسی تنظیم شد. 👍", reply_to=None)
-        return
+    # Handle setting updates with consolidated logic
+    async def update_setting(field: str, value: str, pattern: str, response_key: str, **kwargs) -> bool:
+        if value and re.search(pattern, message, re.IGNORECASE):
+            updates = {field: value, text_keys.first_name_field: user_name}
+            success = await profile_manager.db_set_user_profile(event.chat_id, event.sender_id, updates)
+            if success:
+                await event.respond(text_loader.get_text(response_key, user=user_name, lang=user_lang, **kwargs), reply_to=None)
+            return True
+        return False
     
-    # Tone setting
-    tone = profile_manager.parse_tone(message)
-    if tone and re.search(r'لحن من|my tone', message, re.IGNORECASE):
-        success = await profile_manager.db_set_user_profile(event.chat_id, event.sender_id, {"tone": tone, "first_name": user_name})
-        if success:
-            if user_lang == "tr":
-                await event.respond(f"{user_name}, tonunuz {tone} olarak ayarlandı.", reply_to=None)
-            else:
-                await event.respond(f"{user_name}، لحنت روی {tone} تنظیم شد.", reply_to=None)
-        return
+    # Process settings in order
+    settings_checks = [
+        (text_keys.lang_field, profile_manager.parse_language(message), text_keys.language_pattern, "ui.lang_set", {"lang": profile_manager.parse_language(message) or ""}),
+        (text_keys.tone_field, profile_manager.parse_tone(message), text_keys.tone_pattern, "ui.tone_set", {"tone": profile_manager.parse_tone(message) or ""}),
+        (text_keys.humor_level_field, profile_manager.parse_humor(message), text_keys.humor_pattern, "ui.humor_set", {"humor": profile_manager.parse_humor(message) or ""})
+    ]
     
-    # Humor setting
-    humor = profile_manager.parse_humor(message)
-    if humor and re.search(r'شوخی|humor', message, re.IGNORECASE):
-        success = await profile_manager.db_set_user_profile(event.chat_id, event.sender_id, {"humor_level": humor, "first_name": user_name})
-        if success:
-            if user_lang == "tr":
-                await event.respond(f"{user_name}, mizah seviyeniz {humor} olarak ayarlandı.", reply_to=None)
-            else:
-                await event.respond(f"{user_name}، سطح شوخیت روی {humor} تنظیم شد.", reply_to=None)
-        return
+    for field, value, pattern, response_key, extra_kwargs in settings_checks:
+        if await update_setting(field, value, pattern, response_key, **extra_kwargs):
+            return
     
-    # Birthday setting
+    # Birthday setting with confirmation
     birthday = profile_manager.parse_birthday(message)
-    if birthday and re.search(r'تاریخ تولد|birthday', message, re.IGNORECASE):
-        # Store pending confirmation
+    if birthday and re.search(text_keys.birthday_pattern, message, re.IGNORECASE):
         profile_manager.pending_confirmations[event.sender_id] = {
-            "type": "birthday",
-            "value": birthday,
-            "chat_id": event.chat_id,
-            "user_name": user_name
+            text_keys.type_key: text_keys.birthday_type,
+            text_keys.value_key: birthday,
+            text_keys.chat_id_key: event.chat_id,
+            text_keys.user_name_key: user_name
         }
-        
-        if user_lang == "tr":
-            await event.respond(f"{user_name}, doğum tarihinizi {birthday} olarak kaydetmeyi onaylıyor musunuz? (evet/hayır)", reply_to=None)
-        else:
-            await event.respond(f"{user_name}، برای ذخیره تاریخ تولد {birthday} تایید میکنی؟ (بله/خیر)", reply_to=None)
+        await event.respond(text_loader.get_text("ui.birthday_confirm", user=user_name, birthday=birthday, lang=user_lang), reply_to=None)
         return
     
     # Likes setting
-    if re.search(r'سلیقه|likes', message, re.IGNORECASE):
+    if re.search(text_keys.likes_pattern, message, re.IGNORECASE):
         likes = profile_manager.parse_likes(message)
         if likes:
-            success = await profile_manager.db_set_user_profile(event.chat_id, event.sender_id, {"likes": likes, "first_name": user_name})
+            updates = {text_keys.likes_field: likes, text_keys.first_name_field: user_name}
+            success = await profile_manager.db_set_user_profile(event.chat_id, event.sender_id, updates)
             if success:
-                if user_lang == "tr":
-                    await event.respond(f"{user_name}, ilgi alanlarınız kaydedildi: {', '.join(likes)} 🎯", reply_to=None)
-                else:
-                    await event.respond(f"{user_name}، سلیقههات ذخیره شد: {', '.join(likes)} 🎯", reply_to=None)
+                await event.respond(text_loader.get_text("ui.likes_saved", user=user_name, likes=', '.join(likes), lang=user_lang), reply_to=None)
         return
     
     # Handle confirmations
     if event.sender_id in profile_manager.pending_confirmations:
         confirmation = profile_manager.pending_confirmations[event.sender_id]
         
-        if re.search(r'بله|yes|evet', message, re.IGNORECASE):
-            if confirmation["type"] == "birthday":
+        if re.search(text_keys.yes_pattern, message, re.IGNORECASE):
+            if confirmation[text_keys.type_key] == text_keys.birthday_type:
+                updates = {
+                    text_keys.birthday_field: confirmation[text_keys.value_key],
+                    text_keys.first_name_field: user_name
+                }
                 success = await profile_manager.db_set_user_profile(
-                    confirmation["chat_id"], 
-                    event.sender_id, 
-                    {"birthday": confirmation["value"], "first_name": user_name}
+                    confirmation[text_keys.chat_id_key], event.sender_id, updates
                 )
                 if success:
-                    if user_lang == "tr":
-                        await event.respond(f"✅ {user_name}, doğum tarihiniz kaydedildi.", reply_to=None)
-                    else:
-                        await event.respond(f"✅ {user_name}، تاریخ تولدت ذخیره شد.", reply_to=None)
+                    await event.respond(text_loader.get_text("ui.birthday_saved", user=user_name, lang=user_lang), reply_to=None)
             
             del profile_manager.pending_confirmations[event.sender_id]
         
-        elif re.search(r'خیر|no|hayır', message, re.IGNORECASE):
+        elif re.search(text_keys.no_pattern, message, re.IGNORECASE):
             del profile_manager.pending_confirmations[event.sender_id]
-            if user_lang == "tr":
-                await event.respond(f"{user_name}, işlem iptal edildi.", reply_to=None)
-            else:
-                await event.respond(f"{user_name}، عملیات لغو شد.", reply_to=None)
+            await event.respond(text_loader.get_text("ui.operation_cancelled", user=user_name, lang=user_lang), reply_to=None)
 
 def register_user_settings_handlers(client) -> None:
-    print("[DEBUG] Registering user settings handlers")
-    client.add_event_handler(
-        handle_user_settings,
-        events.NewMessage(incoming=True)
-    )
-    print("[DEBUG] User settings handlers registered successfully")
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(text_loader.get_text("log.registering_handlers", handler="user_settings"))
+    client.add_event_handler(handle_user_settings, events.NewMessage(incoming=True))
+    logger.info(text_loader.get_text("log.handlers_registered", handler="user_settings"))

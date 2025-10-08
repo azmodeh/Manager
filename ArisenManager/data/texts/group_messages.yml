@@ -1,0 +1,47 @@
+ui:
+  group:
+    panel: "پنل مدیریت گروه {chat}"
+    panel_sent: "پنل مدیریت برای شما ارسال شد"
+    pending: "بات در انتظار تایید مدیر است..."
+    approved: "گروه تایید شد! ✅"
+    rejected: "گروه رد شد ❌"
+    userbot_added: "یوزربات با موفقیت اضافه شد 🤖"
+    default_name: "گروه"
+    
+    welcome:
+      menu: "تنظیمات خوشامدگویی\n\nوضعیت: {status}"
+      default: "سلام {user}! به گروه {chat} خوش آمدید 🎉"
+    
+    rules:
+      menu: "تنظیمات قوانین\n\nوضعیت: {status}"
+      default: "قوانین گروه {chat}:\n\n📋 لطفاً قوانین را رعایت کنید"
+      disabled: "قوانین برای این گروه فعال نیست"
+    
+    settings:
+      welcome: "تنظیمات خوشامدگویی"
+      rules: "تنظیمات قوانین"
+
+admin:
+  group:
+    approval_request: "درخواست تایید گروه:\n\n📝 نام: {group_title}\n🆔 شناسه: {group_id}"
+    approved: "گروه تایید شد"
+    rejected: "گروه رد شد"
+  
+  button:
+    approve: "تایید"
+    reject: "رد"
+    toggle: "تغییر وضعیت"
+    edit_text: "ویرایش متن"
+    back: "بازگشت"
+  
+  status:
+    enabled: "فعال"
+    disabled: "غیرفعال"
+
+err:
+  group:
+    userbot_failed: "خطا در اضافه کردن یوزربات: {error}"
+
+cmd:
+  panel: "^(?:panel|پنل|settings|تنظیمات)$"
+  rules: "^(?:rules|قوانین|قانون)$"

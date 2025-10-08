@@ -8,10 +8,9 @@ from typing import List
 
 from sentence_transformers import SentenceTransformer
 
-from app.core.text_loader import TextLoader
+from ..utils.text_loader import text_loader
 
 logger = logging.getLogger(__name__)
-text_loader = TextLoader()
 
 
 class EmbeddingService:
@@ -31,10 +30,10 @@ class EmbeddingService:
                 self._model = await asyncio.to_thread(
                     SentenceTransformer, self._model_name
                 )
-                logger.info(text_loader.get("log.embedding.model_loaded", 
+                logger.info(text_loader.get_text("log.embedding.model_loaded", 
                                           model=self._model_name))
             except Exception as e:
-                logger.error(text_loader.get("err.embedding.model_load", 
+                logger.error(text_loader.get_error("err.embedding.model_load", 
                                            error=str(e)))
                 raise
         return self._model
@@ -58,7 +57,7 @@ class EmbeddingService:
         sanitized = self._sanitize_text(text)
         
         if len(sanitized) < self._min_length:
-            logger.warning(text_loader.get("log.embedding.text_too_short", 
+            logger.warning(text_loader.get_text("log.embedding.text_too_short", 
                                          length=len(sanitized)))
             return []
         
@@ -73,7 +72,7 @@ class EmbeddingService:
             return embedding.astype('float32').tolist()
         
         except Exception as e:
-            logger.error(text_loader.get("err.embedding.encode", error=str(e)))
+            logger.error(text_loader.get_error("err.embedding.encode", error=str(e)))
             raise
     
     async def embed_batch(self, texts: List[str]) -> List[List[float]]:
@@ -85,7 +84,7 @@ class EmbeddingService:
         valid_texts = [t for t in sanitized_texts if len(t) >= self._min_length]
         
         if not valid_texts:
-            logger.warning(text_loader.get("log.embedding.no_valid_texts"))
+            logger.warning(text_loader.get_text("log.embedding.no_valid_texts"))
             return []
         
         try:
@@ -100,6 +99,6 @@ class EmbeddingService:
             return [emb.astype('float32').tolist() for emb in embeddings]
         
         except Exception as e:
-            logger.error(text_loader.get("err.embedding.batch_encode", 
+            logger.error(text_loader.get_error("err.embedding.batch_encode", 
                                        error=str(e)))
             raise

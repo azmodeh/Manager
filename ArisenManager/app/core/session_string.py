@@ -10,7 +10,16 @@ logger = logging.getLogger(__name__)
 
 class SessionGenerator:
     def __init__(self) -> None:
-        self.config = config_loader.get_telegram_config()
+        import os
+        from dotenv import load_dotenv
+        load_dotenv("data/.env")
+        
+        self.config = {
+            "api_id": int(os.getenv("TELEGRAM_API_ID")),
+            "api_hash": os.getenv("TELEGRAM_API_HASH"),
+            "bot_token": os.getenv("TELEGRAM_BOT_TOKEN"),
+            "phone_number": os.getenv("TELEGRAM_PHONE_NUMBER")
+        }
     
     async def generate_userbot_session(self) -> Optional[str]:
         try:

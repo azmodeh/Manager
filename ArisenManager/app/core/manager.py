@@ -1,4 +1,6 @@
 import asyncio
+import sys
+import re
 from typing import Optional
 from rich.console import Console
 from rich.panel import Panel
@@ -15,45 +17,60 @@ from ..utils.config_loader import config_loader
 
 class ArisenManager:
     def __init__(self) -> None:
-        self.console = Console()
+        # Fix Windows console encoding for Unicode support
+        if sys.platform == "win32":
+            try:
+                sys.stdout.reconfigure(encoding='utf-8')
+                sys.stderr.reconfigure(encoding='utf-8')
+            except AttributeError:
+                pass
+        
+        self.console = Console(force_terminal=True, legacy_windows=False)
         self.running = False
     
+    def _safe_print(self, text: str, style: str = "default") -> None:
+        """Print text safely by removing emojis on Windows"""
+        if sys.platform == "win32":
+            # Remove emojis and other Unicode symbols that cause issues
+            text = re.sub(r'[^\x00-\x7F]+', '', text)
+        try:
+            self.console.print(text, style=style)
+        except UnicodeEncodeError:
+            # Fallback: print without style
+            print(text.encode('ascii', 'ignore').decode('ascii'))
+    
     def display_banner(self) -> None:
-        banner = Text("ArisenManager", style="bold cyan")
-        panel = Panel(banner, title="Telegram Bot Manager", border_style="blue")
+        banner = Text(text_loader.get_text("ui.banner.title", lang="en"), style="bold cyan")
+        panel = Panel(banner, title=text_loader.get_text("ui.banner.subtitle", lang="en"), border_style="blue")
         self.console.print(panel)
     
     async def initialize_database(self) -> bool:
-        self.console.print(text_loader.get_text("log.startup", lang="en"), style="yellow")
+        self._safe_print(text_loader.get_text("log.startup", lang="en"), "yellow")
         return await database.connect()
     
     async def setup_sessions(self) -> tuple[Optional[str], Optional[str]]:
-        config = config_loader.load_config("env.yml")
-        telegram_config = config.get("telegram", {})
-        sessions = config.get("sessions", {})
+        import os
+        from dotenv import load_dotenv
         
-        userbot_session = telegram_config.get("session_string") or sessions.get("userbot_session")
-        apibot_session = sessions.get("apibot_session")
+        # Load environment variables from .env file
+        env_path = self.console._file.name if hasattr(self.console, '_file') else None
+        if not env_path:
+            env_path = "data/.env"
+        load_dotenv(env_path)
         
-        if not userbot_session:
-            self.console.print("Generating UserBot session...", style="cyan")
-            userbot_session = await session_generator.generate_userbot_session()
-        
-        if not apibot_session:
-            self.console.print("Generating API Bot session...", style="cyan")
-            apibot_session = await session_generator.generate_bot_session()
+        userbot_session = os.getenv("TELEGRAM_SESSION_STRING")
+        apibot_session = os.getenv("TELEGRAM_SESSION_STRING")
         
         return userbot_session, apibot_session
     
     async def start_bots(self, userbot_session: str, apibot_session: str) -> bool:
         try:
             await bot_clients.start_userbot(userbot_session)
-            self.console.print(text_loader.get_text("log.userbot_online", lang="en"), style="green")
+            self._safe_print(text_loader.get_text("log.userbot_online", lang="en"), "green")
             
             await bot_clients.start_apibot(apibot_session)
-            self.console.print(text_loader.get_text("log.apibot_online", lang="en"), style="green")
+            self._safe_print(text_loader.get_text("log.apibot_online", lang="en"), "green")
             
-            print("[DEBUG] Registering handlers for apibot (ONCE)")
             register_start_help_handlers(bot_clients.apibot)
             register_admin_handlers(bot_clients.apibot)
             register_group_handlers(bot_clients.apibot)
@@ -61,39 +78,36 @@ class ArisenManager:
             register_text_editor_handlers(bot_clients.apibot)
             register_user_settings_handlers(bot_clients.apibot)
             
-            handlers_count = len(bot_clients.apibot.list_event_handlers())
-            print(f"[DEBUG] Total handlers registered: {handlers_count}")
-            
             # Notify sudo
             await bot_clients.notify_sudo_online()
             
             return True
         except Exception as e:
-            self.console.print(f"Error starting bots: {e}", style="red")
+            self._safe_print(text_loader.get_text("err.bot_start", lang="en", error=str(e)), "red")
             return False
     
     async def start(self) -> None:
         self.display_banner()
         
         if not await self.initialize_database():
-            self.console.print("Database initialization failed", style="red")
+            self._safe_print(text_loader.get_text("err.database_init", lang="en"), "red")
             return
         
         userbot_session, apibot_session = await self.setup_sessions()
         
         if not userbot_session or not apibot_session:
-            self.console.print("Session generation failed", style="red")
+            self._safe_print(text_loader.get_text("err.session_gen", lang="en"), "red")
             return
         
         if not await self.start_bots(userbot_session, apibot_session):
             return
         
-        self.console.print(text_loader.get_text("log.ready", lang="en"), style="bold green")
+        self._safe_print(text_loader.get_text("log.ready", lang="en"), "bold green")
         self.running = True
         
         try:
             await bot_clients.apibot.run_until_disconnected()
         except KeyboardInterrupt:
-            self.console.print("Shutting down...", style="yellow")
+            self._safe_print(text_loader.get_text("log.shutdown", lang="en"), "yellow")
         finally:
             self.running = False

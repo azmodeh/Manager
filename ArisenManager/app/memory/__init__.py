@@ -1,13 +1,17 @@
 """Memory module for embedding and vector operations."""
 
-from app.memory.embedding_service import EmbeddingService
-from app.memory.qdrant_client import VectorMemoryDB
-from app.memory.schemas import EmbeddingPayload, SearchResult, ConfigSchema
+from .embedding_service import EmbeddingService
+from .qdrant_client import VectorMemoryDB
+from .schemas import EmbeddingPayload, SearchResult, ConfigSchema, MemoryPayload, ContextResult
+from .vector_memory_qdrant import vector_memory
 
 __all__ = [
     "EmbeddingService",
     "VectorMemoryDB", 
     "EmbeddingPayload",
     "SearchResult",
-    "ConfigSchema"
+    "ConfigSchema",
+    "MemoryPayload",
+    "ContextResult",
+    "vector_memory"
 ]

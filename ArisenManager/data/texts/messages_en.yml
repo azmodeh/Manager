@@ -1,6 +1,9 @@
 # English UI Messages (fallback)
 ui:
   default_user_name: "friend"
+  banner:
+    title: "ArisenManager"
+    subtitle: "Telegram Bot Manager"
   welcome:
     text: "Hello {user}! Welcome to {chat} group 🎉"
   
@@ -22,7 +25,7 @@ ui:
       rules: "Rules Settings"
 
 admin:
-  online: "{bot_type} is online ✅"
+  online: "{bot_type} is online"
   group:
     approval_request: "Group approval request:\n\n📝 Name: {group_title}\n🆔 ID: {group_id}"
     approved: "Group approved"
@@ -42,6 +45,16 @@ vector_memory:
     language: "fa"
 # English log messages
 log:
+  startup: "Initializing database connection..."
+  userbot_online: "UserBot is online ✅"
+  apibot_online: "API Bot is online ✅"
+  ready: "🚀 ArisenManager is ready!"
+  generating_userbot: "Generating UserBot session..."
+  generating_apibot: "Generating API Bot session..."
+  shutdown: "Shutting down..."
+  handlers:
+    ai_registered: "AI social handlers registered"
+    admin_registered: "Admin handlers registered"
   embedding:
     model_loaded: "Embedding model loaded: {model}"
     text_too_short: "Text too short for embedding: {length} chars"
@@ -67,3 +80,14 @@ err:
     upsert: "Memory upsert error: {error}"
     search: "Memory search error: {error}"
     compact: "Memory compact error: {error}"
+  bot_start: "Error starting bots: {error}"
+  database_init: "Database initialization failed"
+  session_gen: "Session generation failed"
+
+sys:
+  config_file: "env.yml"
+  telegram_key: "telegram"
+  sessions_key: "sessions"
+  session_string_key: "session_string"
+  userbot_session_key: "userbot_session"
+  apibot_session_key: "apibot_session"

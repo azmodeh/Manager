@@ -67,6 +67,11 @@ admin_filter:
 sudo_filter:
   permission_check_failed: "Failed to check sudo permissions: {error}"
   access_denied: "Access denied for user {user_id}, sudo required"
+  config_missing: "Sudo ID not configured"
+
+group_filter:
+  private_chat_blocked: "Message from private chat {chat_id}, group filter applied"
+  error: "Group filter error: {error}"
 
 text_loader:
   file_not_found: "Text catalog file not found: {filename}"

@@ -2,6 +2,7 @@ from telethon import events, Button
 from ..core.database import database
 from ..utils.text_loader import text_loader
 from ..filters import sudo_filter
+from ..utils.logger import logger
 
 @sudo_filter
 async def handle_sudo_settings(event: events.CallbackQuery.Event) -> None:
@@ -69,9 +70,8 @@ async def handle_sudo_settings(event: events.CallbackQuery.Event) -> None:
         await event.edit(text, buttons=buttons)
 
 def register_admin_handlers(client) -> None:
-    print("[DEBUG] Registering admin handlers")
     client.add_event_handler(
         handle_sudo_settings,
         events.CallbackQuery()
     )
-    print("[DEBUG] Admin handlers registered successfully")
+    logger.info(text_loader.get_text("log.handlers.admin_registered"))

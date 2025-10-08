@@ -10,17 +10,10 @@ logger = logging.getLogger(__name__)
 
 class Database:
     def __init__(self) -> None:
-        self.config = config_loader.get_database_config()
-        self.db_config = config_loader.load_yaml("database.yml")
-        self.db_path = self._get_db_path()
+        self.db_path = Path(__file__).parent.parent.parent / "data" / "database.db"
         self.connection: Optional[aiosqlite.Connection] = None
     
-    def _get_db_path(self) -> Path:
-        """Get database file path from configuration"""
-        base_path = Path(__file__).parent.parent.parent
-        db_dir = self.db_config["paths"]["db_dir"]
-        db_file = self.db_config["paths"]["db_file"]
-        return base_path / db_dir / db_file
+
     
     async def connect(self) -> bool:
         try:
@@ -28,7 +21,10 @@ class Database:
             self.connection = await aiosqlite.connect(str(self.db_path))
             await self.create_tables()
             return True
-        except Exception as e:
+        except OSError as e:
+            logger.error(text_loader.get_error("database.path_error", error=str(e)))
+            return False
+        except aiosqlite.Error as e:
             logger.error(text_loader.get_error("database.connection", error=str(e)))
             return False
     
@@ -37,43 +33,28 @@ class Database:
             return
         
         try:
-            queries = self.db_config["queries"]
-            await self.connection.execute(queries["create_groups_table"])
-            await self.connection.execute(queries["create_settings_table"])
+            await self.connection.execute("""
+                CREATE TABLE IF NOT EXISTS groups (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT,
+                    approved INTEGER DEFAULT 0
+                )
+            """)
             await self.connection.commit()
-            
-            await self._add_missing_columns()
-        except Exception as e:
+        except aiosqlite.Error as e:
             logger.error(text_loader.get_error("database.table_creation", error=str(e)))
     
-    async def _add_missing_columns(self) -> None:
-        """Add missing columns if they don't exist"""
-        try:
-            queries = self.db_config["queries"]
-            column_queries = [
-                queries["add_start_enabled_column"],
-                queries["add_start_text_column"],
-                queries["add_help_enabled_column"],
-                queries["add_help_text_column"]
-            ]
-            
-            for query in column_queries:
-                try:
-                    await self.connection.execute(query)
-                except Exception:
-                    pass  # Column already exists
-            
-            await self.connection.commit()
-        except Exception as e:
-            logger.warning(text_loader.get_error("database.column_add", error=str(e)))
+
     
     async def add_group(self, group_id: int, title: str) -> bool:
         if not self.connection:
             return False
         
         try:
-            query = self.db_config["queries"]["insert_or_replace_group"]
-            await self.connection.execute(query, (group_id, title))
+            await self.connection.execute(
+                "INSERT OR REPLACE INTO groups (id, name) VALUES (?, ?)",
+                (group_id, title)
+            )
             await self.connection.commit()
             return True
         except Exception as e:
@@ -136,17 +117,28 @@ class Database:
         if not self.connection:
             return False
         
+        # Whitelist of allowed column names to prevent SQL injection
+        allowed_settings = {
+            "name", "approved", "start_enabled", "start_text", 
+            "help_enabled", "help_text", "ai_enabled", "ai_personality",
+            "ai_model", "ai_temperature", "ai_max_tokens"
+        }
+        
+        if setting not in allowed_settings:
+            logger.error(text_loader.get_error("database.invalid_setting", setting=setting))
+            return False
+        
         try:
             # Convert objects to JSON strings for storage
             if isinstance(value, (dict, list)):
                 value = json.dumps(value)
             
-            query_template = self.db_config["queries"]["update_group_setting"]
-            query = query_template.format(setting=setting)
+            # Safe query construction with validated column name
+            query = f"UPDATE groups SET {setting} = ? WHERE id = ?"
             await self.connection.execute(query, (value, group_id))
             await self.connection.commit()
             return True
-        except Exception as e:
+        except aiosqlite.Error as e:
             logger.error(text_loader.get_error("database.group_update", error=str(e)))
             return False
 

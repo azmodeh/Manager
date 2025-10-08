@@ -6,6 +6,12 @@ from typing import Dict, Any, Optional
 from .text_loader import text_loader
 
 logger = logging.getLogger(__name__)
+if not logger.handlers:
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
 
 class ConfigLoader:
     def __init__(self) -> None:
@@ -21,7 +27,7 @@ class ConfigLoader:
             with open(config_path, 'r', encoding='utf-8') as f:
                 self._config = yaml.safe_load(f)
         except Exception as e:
-            logger.error(f"Failed to load config loader configuration: {e}")
+            logger.error(text_loader.get_error("config_loader.init_error", error=str(e)))
             # Fallback configuration
             self._config = {
                 "paths": {"config_dir": "data/config"},
@@ -69,9 +75,24 @@ class ConfigLoader:
                 with open(file_path, mode, encoding=encoding) as f:
                     content = f.read()
                     
-                    # Replace environment variables
-                    for key, value in os.environ.items():
-                        content = content.replace(f"${{{key}}}", value)
+                    # Replace environment variables with whitelist validation
+                    allowed_env_vars = self._config.get("allowed_env_vars", ["TELEGRAM_BOT_TOKEN", "DATABASE_URL"])
+                    for key in allowed_env_vars:
+                        if key in os.environ:
+                            value = os.environ[key]
+                            # Strict path traversal validation
+                            import re
+                            # Block any path traversal patterns
+                            dangerous_patterns = ["..", "%2e", "%2f", "%5c", "file://"]
+                            has_traversal = any(pattern in value.lower() for pattern in dangerous_patterns)
+                            # Only allow alphanumeric, common URL chars, and known safe protocols
+                            is_safe_format = re.match(r'^[a-zA-Z0-9:/.@_-]+$', value)
+                            is_safe = is_safe_format and not has_traversal and len(value) < 500
+                            
+                            if is_safe:
+                                content = content.replace(f"${{{key}}}", value)
+                            else:
+                                logger.warning(text_loader.get_error("config_loader.env_path_traversal", key=key))
                     
                     self._cache[filename] = yaml.safe_load(content) or {}
                     
